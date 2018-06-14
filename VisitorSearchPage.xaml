@@ -12,10 +12,8 @@
         <CollectionViewSource x:Key="ItemCollectionViewSource" CollectionViewType="ListCollectionView"/>
     </Page.Resources>
     <Grid Background="White">
-        <Button x:Name="btnNext" Content="Nästa" HorizontalAlignment="Left" Margin="601,563,0,0" VerticalAlignment="Top" Width="76" Click="btnNext_Click" Height="40" FontSize="20"/>
-        <Button x:Name="btnPrev" Content="Tillbaka" HorizontalAlignment="Left" Margin="336,563,0,0" VerticalAlignment="Top" Width="74" Click="btnPrev_Click" Height="40" FontSize="20"/>
-
-        <DataGrid x:Name="grdBookedMeetingResult" HorizontalAlignment="Left" Height="258" Margin="10,79,0,0" VerticalAlignment="Top" Width="1036" DataContext="{StaticResource ItemCollectionViewSource}" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionMode="Single">
+        <Button x:Name="btnSearch" Content="Sök" HorizontalAlignment="Left" Margin="42,48,0,0" VerticalAlignment="Top" Width="75" Click="btnSearch_Click"/>
+        <DataGrid x:Name="grdBookedMeetingResult" HorizontalAlignment="Left" Height="377" Margin="10,79,0,0" VerticalAlignment="Top" Width="1036" DataContext="{StaticResource ItemCollectionViewSource}" ItemsSource="{Binding}" AutoGenerateColumns="False">
 
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
@@ -26,17 +24,17 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header=" Incheckning" Binding="{Binding CheckIn}"/>
-                <DataGridTextColumn Header=" Utcheckning" Binding="{Binding CheckOut}"/>
-                <DataGridTextColumn Header=" Besökare Förnamn" Binding="{Binding VisitorFirstName}"/>
-                <DataGridTextColumn Header=" Besökare Efternamn" Binding="{Binding VisitorLastName}"/>
+                <DataGridTextColumn Header=" Incheckning" Binding="{Binding VisitorCheck_in}"/>
+                <DataGridTextColumn Header=" Utcheckning" Binding="{Binding VisitorCheck_out}"/>
+                <DataGridTextColumn Header=" Besökare Förnamn" Binding="{Binding VisitorFirstname}"/>
+                <DataGridTextColumn Header=" Besökare Efternamn" Binding="{Binding VisitorLastname}"/>
                 <DataGridTextColumn Header=" Företag" Binding="{Binding Company}"/>
                 <DataGridTextColumn Header=" Anställnings-ID" Binding="{Binding EmployeeID}"/>
-                <DataGridTextColumn Header=" Anställd Förnamn" Binding="{Binding EmployeeFirstName}"/>
-                <DataGridTextColumn Header=" Anställd Efternamn" Binding="{Binding EmployeeLastName}"/>
+                <DataGridTextColumn Header=" Anställd Förnamn" Binding="{Binding EmployeeFirstname}"/>
+                <DataGridTextColumn Header=" Anställd Efternamn" Binding="{Binding EmployeeLastname}"/>
                 <DataGridTextColumn Header=" Avdelning" Binding="{Binding MeetingDepartment}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button x:Name="btnSearch" Content="Sök" HorizontalAlignment="Left" Margin="42,48,0,0" VerticalAlignment="Top" Width="75" Click="btnSearch_Click"/>
+        
     </Grid>
 </Page>

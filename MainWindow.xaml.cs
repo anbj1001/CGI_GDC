@@ -28,8 +28,14 @@ namespace DatabaseAdmin
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MyWindow_Loaded;
+
             cBoxTry.ItemsSource = GetAllEmployeeMeeting(); // För att printa employee till comboboxen
 
+        }
+        private void MyWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            frame.NavigationService.Navigate(new LoginPage());
         }
         Window1 window1 = new Window1();
 
@@ -37,7 +43,7 @@ namespace DatabaseAdmin
 
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
-            string vFirstname = ""; 
+            string vFirstname = "Kristian"; 
             string vLastname = "";
             string eFirstname = "Clara";
             string eLastname = "Jonsson";
@@ -90,23 +96,28 @@ namespace DatabaseAdmin
         {
 
         }
-      
 
-            /*
-             * TEST CODE FOR UPDATE EMPLOYEE. INKL ENUM DEKLARATION
-            Employee emp = new Employee
-            {
-                EmployeeID = 1010,
-                Firstname = "Freja",
-                Lastname = "Larsson"
-            };
-            string input;
 
-            input = eHC.GetColumn(DatabaseColumns.firstname);
-            string firstname = "Sture-Berit";
+        private void btnStartPage_Click(object sender, RoutedEventArgs e)
+        {
 
-            int result = UpdateEmployeeInfo(emp, input, firstname);
-            */
+        }
+
+        /*
+         * TEST CODE FOR UPDATE EMPLOYEE. INKL ENUM DEKLARATION
+        Employee emp = new Employee
+        {
+            EmployeeID = 1010,
+            Firstname = "Freja",
+            Lastname = "Larsson"
+        };
+        string input;
+
+        input = eHC.GetColumn(DatabaseColumns.firstname);
+        string firstname = "Sture-Berit";
+
+        int result = UpdateEmployeeInfo(emp, input, firstname);
+        */
         /*
          * TEST CODE FOR CHECKOUT VISITOR (AND SOM EMPLOYEE-PROP FROM  ADD ADMIN)
                     Visitor v;

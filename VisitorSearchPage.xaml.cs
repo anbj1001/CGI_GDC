@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DatabaseAdmin.Model;
+using DatabaseAdmin.DatabaseConnections;
+using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
 
 namespace DatabaseAdmin
 {
@@ -29,11 +31,24 @@ namespace DatabaseAdmin
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
+            int vID = 0;
+            string vFirstname = "%";
+            string vLastname = "%";
+            string company = "%";
+            DateTime vCheckIn;
+            DateTime vCheckOut;
+            int eID = 0;
+            string eFirstname = "%";
+            string eLastname = "%";
+            string meetingDepartment = "%";
+
+
+
+            //Try Catch?
             List<VisitorSearch> searchResults = new List<VisitorSearch>();
-            //  infoga anrop till sökmetoden här
-            //  searchResults = metodnamnet
-            CollectionViewSource itemCollectionViewSource;
-            itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
+
+            searchResults = GetVisitorSearchInfo(vFirstname);
+            CollectionViewSource itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
             itemCollectionViewSource.Source = searchResults;
         }
     }

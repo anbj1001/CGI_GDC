@@ -128,19 +128,18 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         //För VisitorSearch
-        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname, string vLastname, string eLastnaemw)
+        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname/*, string vLastname, string eLastname*/)
         {// Uppfukkad!
             VisitorSearch vs;
             List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
 
-            string stmt = "SELECT visitor.firstname, visitor.lastname, visitor.company, visitor.check_in," +
+            string stmt = "SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in," +
                 " visitor.check_out, employee.employee_id, employee.firstname, employee.lastname,booked_meeting.meeting_department" +
                 " FROM visitor " +
                 " JOIN visitor_meeting ON visitor.visitor_id = visitor_meeting.visitor_id" +
                 " JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id" +
                 " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
-                " WHERE UPPER(visitor.firstname) LIKE UPPER(@vFirstname) AND UPPER(visitor.lastname) LIKE UPPER(@vLastname)" +
-                " AND (employee.firstname) LIKE UPPER('X%') AND UPPER(employee.lastname) LIKE UPPER('X%')";
+                " WHERE UPPER(visitor.firstname) LIKE UPPER(@firstname) ";
 
 
 
@@ -178,8 +177,8 @@ namespace DatabaseAdmin.DatabaseConnections
                 {
 
                     //Lägg till parametrar
-                    cmd.Parameters.AddWithValue("@vFirstname", vFirstname);
-                    cmd.Parameters.AddWithValue("@vLastname", vLastname);
+                    cmd.Parameters.AddWithValue("@firstname", vFirstname);
+                    //cmd.Parameters.AddWithValue("@vLastname", vLastname);
 
 
                     using (var reader = cmd.ExecuteReader())
