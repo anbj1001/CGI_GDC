@@ -5,6 +5,12 @@ VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAdmin", "DatabaseAdmin.csproj", "{FE821055-ECF1-495E-A068-F1F5B252E050}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F820A70-A0F9-4667-B022-4ACEEB046AEA}"
+	ProjectSection(SolutionItems) = preProject
+		..\KN DatabaseAdmin 2018-06-13 med påbörjat gränssnitt\DatabaseAdmin\VisitorSearchPage.xaml = ..\KN DatabaseAdmin 2018-06-13 med påbörjat gränssnitt\DatabaseAdmin\VisitorSearchPage.xaml
+		..\KN DatabaseAdmin 2018-06-13 med påbörjat gränssnitt\DatabaseAdmin\VisitorSearchPage.xaml.cs = ..\KN DatabaseAdmin 2018-06-13 med påbörjat gränssnitt\DatabaseAdmin\VisitorSearchPage.xaml.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
