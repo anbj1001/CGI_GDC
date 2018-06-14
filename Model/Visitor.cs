@@ -16,6 +16,7 @@ namespace DatabaseAdmin.Model
         public int? VisitorBadge { get; set; }
         public DateTime? Check_in { get; set; }
         public DateTime? Check_out { get; set; }
+        public bool BadgeReturned { get; set; }
         public List<BookedMeeting> BookedMeetings { get; set; }
 
 

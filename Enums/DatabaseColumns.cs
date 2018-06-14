@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseAdmin.Model
+namespace DatabaseAdmin.Enums
 {
-    public enum ColumnsInEmployee
+    public enum DatabaseColumns
     {
         employee_id,
         firstname,

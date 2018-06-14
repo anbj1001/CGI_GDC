@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DatabaseAdmin.Model;
+using DatabaseAdmin.Enums;
 using Npgsql;
 
 namespace DatabaseAdmin.DatabaseConnections
@@ -24,10 +25,10 @@ namespace DatabaseAdmin.DatabaseConnections
 
 
             string stmt = "select employee_id, check_in, check_out from employee_check_in";
-            
+
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
-                
+
                 conn.Open();
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 using (var reader = cmd.ExecuteReader())
@@ -41,7 +42,7 @@ namespace DatabaseAdmin.DatabaseConnections
                             EmployeeID = (reader["employee_id"] != DBNull.Value) ? reader.GetInt32(0) : (int?)null,
                             CheckIn = (reader["check_in"] != DBNull.Value) ? reader.GetTimeStamp(1).ToDateTime() : (DateTime?)null,
                             CheckOut = (reader["check_out"] != DBNull.Value) ? reader.GetTimeStamp(2).ToDateTime() : (DateTime?)null,
-                            
+
                         };
                         checkIns.Add(eci);
                     }
@@ -52,7 +53,7 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         static public List<Employee> GetAllEmployeeMeeting()
-        {// Funkar!! JävlarIHelveteVadBraJagÄr!!
+        {// Funkar!! 
 
             List<Employee> employees = new List<Employee>();
             BookedMeeting bm;
@@ -95,7 +96,7 @@ namespace DatabaseAdmin.DatabaseConnections
 
                         };
                         employees.Add(e);
-                        
+
                     }
                 }
                 return employees;
@@ -143,7 +144,7 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         public static int UpdateEmployeeInfo(Employee e, string column, string changedValue)
-        {// Funkar!!
+        {// Funkar!! kan column sättas med att man på något sätt ger testboxen ett variabelnamn för ett kolumnnamn 
             int result;
 
 
@@ -156,10 +157,10 @@ namespace DatabaseAdmin.DatabaseConnections
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 {
 
-                    cmd.Parameters.AddWithValue("@employee_id", e.EmployeeID);
-                    cmd.Parameters.AddWithValue("@firstname", e.Firstname);
+                    cmd.Parameters.AddWithValue("employee_id", e.EmployeeID);
+                    cmd.Parameters.AddWithValue("firstname", e.Firstname);
                     cmd.Parameters.AddWithValue("@lastname", e.Lastname);
-                    cmd.Parameters.AddWithValue("@changedValue", changedValue);
+                    cmd.Parameters.AddWithValue("changedValue", changedValue);
                     result = cmd.ExecuteNonQuery();
                 }
             }
@@ -255,6 +256,29 @@ namespace DatabaseAdmin.DatabaseConnections
                     cmd.Parameters.AddWithValue("@lastname", a.Lastname);
                     cmd.Parameters.AddWithValue("@password", a.Password);
                     cmd.Parameters.AddWithValue("@username", a.Username);
+                    result = cmd.ExecuteNonQuery();
+                }
+            }
+            return result;
+        }
+
+        public static int DeleteOneEmployee(Employee e)
+        {//Funkar men ska det vara andra / fler parametrar än employee_id?
+            int result;
+
+
+            string stmt = $"DELETE FROM employee WHERE employee_id = @employee_id";
+
+
+            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(stmt, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@employee_id", e.EmployeeID);
+                    //cmd.Parameters.AddWithValue("@firstname", e.Firstname);
+                    //cmd.Parameters.AddWithValue("@lastname", e.Lastname);
                     result = cmd.ExecuteNonQuery();
                 }
             }

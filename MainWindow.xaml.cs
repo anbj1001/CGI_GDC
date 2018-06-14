@@ -8,11 +8,15 @@ using System.Windows.Input;
 using System.Configuration;
 using Npgsql;
 using DatabaseAdmin.Model;
+using DatabaseAdmin.Enums;
 using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
 using static DatabaseAdmin.DatabaseConnections.GetEmployeeInfo;
 using static DatabaseAdmin.DatabaseConnections.Encryptor;
 using System.Xaml;
 using DatabaseAdmin.DatabaseConnections;
+using FirstFloor.ModernUI;
+
+
 
 namespace DatabaseAdmin
 {
@@ -24,6 +28,8 @@ namespace DatabaseAdmin
         public MainWindow()
         {
             InitializeComponent();
+            cBoxTry.ItemsSource = GetAllEmployeeMeeting(); // För att printa employee till comboboxen
+
         }
         Window1 window1 = new Window1();
 
@@ -31,50 +37,102 @@ namespace DatabaseAdmin
 
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
+            string vFirstname = ""; 
+            string vLastname = "";
+            string eFirstname = "Clara";
+            string eLastname = "Jonsson";
+            
+          
 
-            string fName = "Ebba";
-            string lName = "Johansson";
-            try
+            List<VisitorSearch> visitorsSerach = GetVisitorSearchInfo(vFirstname);
+        }
+         
+        /// <summary>
+        /// Test för att sätta datum 3 månader tillbaka. 
+        /// skitmetod.... värdelös
+        /// </summary>
+        /// <returns></returns>
+        private DateTime? test()
+        {
+            DateTime date;
+            date = DateTime.Now;
+            date = date.AddMonths(-3);
+
+            return date;
+        }
+
+
+        private void cBoxTry_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /* Combobox som visar alla employees
+            //List<Employee> employees = GetAllEmployeeMeeting();
+            //cBoxTry.ItemsSource = employees;
+            */
+        }
+
+        /*
+         * TEST FÖR ATT ANVÄNDA DATEPICKER SOM DATUMVÄLJARE (ANVÄNDS EJ)*/
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var picker = sender as DatePicker;
+            DateTime? date = picker.SelectedDate;
+
+            if (picker == null)
             {
-                //List<BookedMeeting> bookedMeetings = GetTimeAndDepartment(fName, lName);
-                //List<Employee> employees = GetAllEmployeeMeeting();
-                List<Visitor> visitorMeetings = GetAllVisitorMeeting();
-                //List<EmployeeCheckIn> checkIns = GetAllEmployeeCheckIn();
-                //List<Visitor> visitors = GetAllVisitor();
-                //List<BookedMeeting> bookedMeetings = GetAllBookedMeeting();
-                //List<Employee> employees = GetAllEmployee();
+                this.Title = "Inget datum valt";
             }
-            catch (PostgresException ex)
+            else
             {
-                MessageBox.Show(ex.Message);
-
+                this.Title = date.Value.ToShortDateString();
             }
-
+        }
+        private void dpickTo_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
 
         }
-        /*
-         * TEST CODE TO UPDATE AN EMPLOYEER (INCL SWITCH-STATEMENT)
-         * Workes for column firstname
-        int ID = 1012;
-        string column = eHC.GetColumn(ColumnsInEmployee.firstname);
-        string changedValue = "Maja";
-        Employee ee = GetOneEmployee(ID);
-        int i = GetEmployeeInfo.UpdateEmployeeInfo(ee, column, changedValue);
-        */
+      
 
-        /* TEST CODE TO ADD AN EMPLOYEE TO TABLE ADMIN
-        *WORKES!
-        Admin admin;
-        admin = new Admin()
-        {används även för UPDATE
-            Firstname = "Wilma",
-            Lastname = "Olsson",
-            EmployeeID = 1011,
-            Username = "Admin3",
-            Password = Encryptor.MD5Hash("Admin3")
-        };
-        //int result = GetEmployeeInfo.MakeToAdmin(admin); 
-        */
+            /*
+             * TEST CODE FOR UPDATE EMPLOYEE. INKL ENUM DEKLARATION
+            Employee emp = new Employee
+            {
+                EmployeeID = 1010,
+                Firstname = "Freja",
+                Lastname = "Larsson"
+            };
+            string input;
+
+            input = eHC.GetColumn(DatabaseColumns.firstname);
+            string firstname = "Sture-Berit";
+
+            int result = UpdateEmployeeInfo(emp, input, firstname);
+            */
+        /*
+         * TEST CODE FOR CHECKOUT VISITOR (AND SOM EMPLOYEE-PROP FROM  ADD ADMIN)
+                    Visitor v;
+                    v = new Visitor()
+                    {//används även för UPDATE
+                        VisitorID = 10008,
+                        BadgeReturned = true
+                        //Firstname = "Wilma",
+                        //Lastname = "Olsson",
+                        //EmployeeID = 1011,
+                        //Username = "Admin3",
+                        //Password = Encryptor.MD5Hash("Admin3")
+                    };
+                    //string fName = "Ebba";
+                    //string lName = "Johansson";
+                    int i = GetVisitorInfo.CheckOutVisitor(v);
+                    */
+        /*
+* TEST CODE TO UPDATE AN EMPLOYEER (INCL SWITCH-STATEMENT)
+* Workes for column firstname
+int ID = 1012;
+string column = eHC.GetColumn(DatabaseColumns.firstname);
+string changedValue = "Maja";
+Employee ee = GetOneEmployee(ID);
+int i = GetEmployeeInfo.UpdateEmployeeInfo(ee, column, changedValue);
+*/
 
 
         /*TEST CODE FOR ADMINLOGIN
@@ -99,6 +157,21 @@ namespace DatabaseAdmin
 
         /* TEST CODE FOR GET LISTS FROM DB
          * WORKES!
+            try
+            {
+                //List<BookedMeeting> bookedMeetings = GetTimeAndDepartment(fName, lName);
+                List<Employee> employees = GetAllEmployeeMeeting();
+                //List<Visitor> visitorMeetings = GetAllVisitorMeeting();
+                //List<EmployeeCheckIn> checkIns = GetAllEmployeeCheckIn();
+                //List<Visitor> visitors = GetAllVisitor();
+                //List<BookedMeeting> bookedMeetings = GetAllBookedMeeting();
+                //List<Employee> employees = GetAllEmployee();
+            }
+            catch (PostgresException ex)
+            {
+                MessageBox.Show(ex.Message);
+
+            }
                 */
     }
 }

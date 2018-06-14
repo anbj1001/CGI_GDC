@@ -6,41 +6,42 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Npgsql;
 using DatabaseAdmin.DatabaseConnections;
+using DatabaseAdmin.Enums;
 
 
 namespace DatabaseAdmin.Model
 {
-    class EmployeeHelperClass
+     public class EmployeeHelperClass
     {
-        public string GetColumn(ColumnsInEmployee columnsInEmployee)
+        public string GetColumn(DatabaseColumns columnsInEmployee)
         {
             switch (columnsInEmployee)
             {
-                case ColumnsInEmployee.firstname:
+                case DatabaseColumns.firstname:
                     return "firstname";
 
-                case ColumnsInEmployee.lastname:
+                case DatabaseColumns.lastname:
                     return "lastname";
 
-                case ColumnsInEmployee.address:
+                case DatabaseColumns.address:
                     return "address";
 
-                case ColumnsInEmployee.department:
+                case DatabaseColumns.department:
                     return "department";
 
-                case ColumnsInEmployee.email:
+                case DatabaseColumns.email:
                     return "email";
 
-                case ColumnsInEmployee.employee_id:
+                case DatabaseColumns.employee_id:
                     return "employee_id";
 
-                case ColumnsInEmployee.phonenumber:
+                case DatabaseColumns.phonenumber:
                     return "phonenumber";
 
-                case ColumnsInEmployee.role:
+                case DatabaseColumns.role:
                     return "role";
 
-                case ColumnsInEmployee.team:
+                case DatabaseColumns.team:
                     return "team";
 
                 default:

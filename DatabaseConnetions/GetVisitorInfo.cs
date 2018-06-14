@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DatabaseAdmin.Model;
+using DatabaseAdmin.Enums;
+
 
 namespace DatabaseAdmin.DatabaseConnections
 {
@@ -13,12 +15,15 @@ namespace DatabaseAdmin.DatabaseConnections
     {
         static public List<Visitor> GetAllVisitor()
         {
+            List<Visitor> visitors = new List<Visitor>();
+            Visitor v;
+
+
             string stmt = "select visitor_id, check_in, check_out, visitor_badge,firstname,lastname, company, city from visitor";
+
+
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
-                List<Visitor> visitors = new List<Visitor>();
-                Visitor v;
-
 
                 conn.Open();
                 using (var cmd = new NpgsqlCommand(stmt, conn))
@@ -45,9 +50,9 @@ namespace DatabaseAdmin.DatabaseConnections
                 return visitors;
             }
         }
-        
+
         static public List<Visitor> GetAllVisitorMeeting()
-        {// Funkar men ej klar
+        {// Funkar men ej klar. Vilken info behövs?
             Visitor v;
             BookedMeeting bm;
             List<Visitor> visitorsMeetings = new List<Visitor>();
@@ -62,8 +67,8 @@ namespace DatabaseAdmin.DatabaseConnections
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
-                conn.Open();
 
+                conn.Open();
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -91,10 +96,6 @@ namespace DatabaseAdmin.DatabaseConnections
                             Check_in = (reader["check_in"] != DBNull.Value) ? reader.GetTimeStamp(4).ToDateTime() : (DateTime?)null,
                             Check_out = (reader["check_out"] != DBNull.Value) ? reader.GetTimeStamp(5).ToDateTime() : (DateTime?)null,
 
-
-
-                            //BookedMeetingID = (reader["booked_meeting_id"] != DBNull.Value) ? reader.GetInt32(1) : (int?)null,
-
                         };
                         visitorsMeetings.Add(v);
                     }
@@ -103,7 +104,111 @@ namespace DatabaseAdmin.DatabaseConnections
             }
         }
 
-       
+        static public int CheckOutVisitor(Visitor v)
+        {// Funkar
+            int result;
+
+
+            string stmt = $"UPDATE visitor  SET check_out  = current_timestamp WHERE visitor_id = @visitor_id; " +
+                $"UPDATE visitor SET badge_returned = @badge_returned WHERE visitor_id = @visitor_id";
+
+
+            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(stmt, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@visitor_id", v.VisitorID);
+                    cmd.Parameters.AddWithValue("@badge_returned", v.BadgeReturned);
+                    result = cmd.ExecuteNonQuery();
+                }
+            }
+            return result;
+        }
+
+        //För VisitorSearch
+        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname, string vLastname, string eLastnaemw)
+        {// Uppfukkad!
+            VisitorSearch vs;
+            List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
+
+            string stmt = "SELECT visitor.firstname, visitor.lastname, visitor.company, visitor.check_in," +
+                " visitor.check_out, employee.employee_id, employee.firstname, employee.lastname,booked_meeting.meeting_department" +
+                " FROM visitor " +
+                " JOIN visitor_meeting ON visitor.visitor_id = visitor_meeting.visitor_id" +
+                " JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id" +
+                " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
+                " WHERE UPPER(visitor.firstname) LIKE UPPER(@vFirstname) AND UPPER(visitor.lastname) LIKE UPPER(@vLastname)" +
+                " AND (employee.firstname) LIKE UPPER('X%') AND UPPER(employee.lastname) LIKE UPPER('X%')";
+
+
+
+            /*   Var ska vi lägga allt det här???
+             *   1.Datumintervall - Kalender
+                 WHERE visitor.check_in BETWEEN 'XXXX-XX-XX%' AND 'XXXX-XX-XX%'
+
+                 2.Tidsintervall in
+
+                 3.Tidsintervall ut
+
+                 4.Besöksmottagare namn
+                 WHERE UPPER(employee.firstname) LIKE UPPER('X%') AND UPPER(employee.lastname) LIKE UPPER('X%')
+
+                 5.Besöksmottagare anställningsnummer
+                 WHERE employee.employee_id::text LIKE 'X%'
+
+                 6.Besökare namn
+                 WHERE UPPER(visitor.firstname) LIKE UPPER('X%') AND UPPER(visitor.lastname) LIKE UPPER('X%') /// LIGGER I STMT
+                 7.Besökare företagsnamn
+                 WHERE UPPER(visitor.company) LIKE UPPER('X%')
+
+                 8.Besökare som saknar uppgifter om utcheckning
+                 WHERE visitor.check_out IS null
+
+                 9.Avdelning(dropdown lista ?)
+                 WHERE booked_meeting.meeting_department = 'Ekonomi'
+
+                 */
+
+            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(stmt, conn))
+                {
+
+                    //Lägg till parametrar
+                    cmd.Parameters.AddWithValue("@vFirstname", vFirstname);
+                    cmd.Parameters.AddWithValue("@vLastname", vLastname);
+
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            vs = new VisitorSearch
+                            {
+
+                                VisitorID = (reader["visitor_id"] != DBNull.Value) ? reader.GetInt32(0) : (int?)null,
+                                VisitorFirstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(1) : null,
+                                VisitorLastname = (reader["lastname"] != DBNull.Value) ? reader.GetString(2) : null,
+                                Company = (reader["company"] != DBNull.Value) ? reader.GetString(3) : null,
+                                VisitorCheck_in = (reader["check_in"] != DBNull.Value) ? reader.GetDateTime(4) : (DateTime?)null,
+                                VisitorCheck_out = (reader["check_out"] != DBNull.Value) ? reader.GetDateTime(5) : (DateTime?)null,
+                                EmployeeID = (reader["employee_id"] != DBNull.Value) ? reader.GetInt32(6) : (int?)null,
+                                EmployeeFirstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(7) : null,
+                                EmployeeLastname = (reader["lastname"] != DBNull.Value) ? reader.GetString(8) : null,
+                                MeetingDepartment = (reader["meeting_department"] != DBNull.Value) ? reader.GetString(9) : null,
+                            };
+
+                            visitorSearch.Add(vs);
+                        }
+                    }
+                    return visitorSearch;
+                }
+
+            }
+        }
     }
 }
 
