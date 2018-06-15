@@ -10,20 +10,19 @@ namespace DatabaseAdmin.DatabaseConnections
     public static class Encryptor
     {
         public static string MD5Hash(string text)
-        {
+        {// Funkar
             MD5 md5 = new MD5CryptoServiceProvider();
 
-            //compute hash from the bytes of text
+            //hasha texten
             md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
 
-            //get hash result after compute it
+            //resultat av hash 
             byte[] result = md5.Hash;
 
             StringBuilder strBuilder = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
-                //change it into 2 hexadecimal digits
-                //for each byte
+                //ändra till 2 hexadecimal för varje byte
                 strBuilder.Append(result[i].ToString("x2"));
             }
 

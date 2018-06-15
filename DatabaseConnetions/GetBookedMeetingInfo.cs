@@ -12,9 +12,9 @@ namespace DatabaseAdmin.DatabaseConnections
     static class GetBookedMeetingInfo
     {
         static public List<BookedMeeting> GetAllBookedMeeting()
-        {
+        {// Funkar
 
-            string stmt = "select * from booked_meeting";
+            string stmt = "SELECT * FROM booked_meeting";
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
                 List<BookedMeeting> bookedMeetings = new List<BookedMeeting>();
@@ -42,7 +42,7 @@ namespace DatabaseAdmin.DatabaseConnections
             }
         }
         public static int CreateBookedMeeting(string mDepartment, DateTime mDate, DateTime timeStart, Employee e)
-        {// Funkar
+        {// 
             int result;
             var sql = new StringBuilder();
             

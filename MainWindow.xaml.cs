@@ -36,15 +36,39 @@ namespace DatabaseAdmin
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //frame.NavigationService.Navigate(new VisitorSearchPage());
+            //frame.NavigationService.Navigate(new LoginPage());
         }
-        Window1 window1 = new Window1();
 
         EmployeeHelperClass eHC = new EmployeeHelperClass();
-        SetBookedMeeting sBM = new SetBookedMeeting();
 
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
+            //Visitor v;
+            //v = new Visitor
+            //{
+            //    Firstname = "Kristian",
+            //    Lastname = "Norqvist",
+            //    VisitorID = 10020,
+            //    BadgeReturned = true
+            //};
+
+
+            Employee emp;
+            emp = new Employee()
+            {//används även för UPDATE
+                Firstname = "Klas",
+                Lastname = "Klasson",
+                Address = "Klassonvägen 33",
+                PhoneNumber = "11223344",
+                Email = "klas@klasson.se",
+                Role = "Praktikant",
+                Department = "Ekonomi",
+                Team = "N/A"
+                
+            };
+            int result = CreateEmployee(emp);
+            //List<VisitorSearch> visitorsSearch = GetVisitorSearchInfo(vFirstname, vLastname, eFirstname, eLastname, eID, vCompany, mDepartment, checkedOut);
+        }
             /*TEST FÖR SETBOOKEDMEETING . MÅSTE KOLLA UPP DATETIME AND TIMESTAMP
              
             Employee emp;
@@ -67,29 +91,26 @@ namespace DatabaseAdmin
 
             int result = CreateBookedMeeting(mDepartment, date, timeStart,emp);
             */
-
             //string eFirstname = null;
             //string eLastname = null;
             //int? eID = 1006;
             //DateTime? checkedOut = null;
 
 
-            //List<VisitorSearch> visitorsSearch = GetVisitorSearchInfo(vFirstname, vLastname, eFirstname, eLastname, eID, vCompany, mDepartment, checkedOut);
-        }
 
         /// <summary>
         /// Test för att sätta datum 3 månader tillbaka. 
         /// skitmetod.... värdelös
         /// </summary>
-        /// <returns></returns>
-        private DateTime? test()
-        {
-            //DateTime? meetingDate = dpickFrom.;
-            //date = DateTime.Now;
-            //date = date.AddMonths(-3);
+        ///// <returns></returns>
+        //private DateTime? test()
+        //{
+        //    //DateTime? meetingDate = dpickFrom.;
+        //    //date = DateTime.Now;
+        //    //date = date.AddMonths(-3);
 
-            //return date;
-        }
+        //    return date;
+        //}
 
 
         private void cBoxTry_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -104,17 +125,12 @@ namespace DatabaseAdmin
          * TEST FÖR ATT ANVÄNDA DATEPICKER SOM DATUMVÄLJARE (ANVÄNDS EJ)*/
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            var picker = sender as DatePicker;
-            DateTime? date = picker.SelectedDate;
+            DateTime? date = (DateTime)dpickFrom.SelectedDate;
+            if (date.HasValue)
+            {
+                string formatted = date.Value.ToString("yyyy-MM-dd");
+            }
 
-            if (picker == null)
-            {
-                this.Title = "Inget datum valt";
-            }
-            else
-            {
-                this.Title = date.Value.ToShortDateString();
-            }
         }
         private void dpickTo_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {

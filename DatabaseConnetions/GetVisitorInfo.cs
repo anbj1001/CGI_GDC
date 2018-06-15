@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DatabaseAdmin.Model;
 using DatabaseAdmin.Enums;
-using static DatabaseAdmin.Model.VisitorHelperClass;
+using static DatabaseAdmin.Model.HandleVisitor;
 
 
 namespace DatabaseAdmin.DatabaseConnections
@@ -15,7 +15,8 @@ namespace DatabaseAdmin.DatabaseConnections
     static class GetVisitorInfo
     {
         static public List<Visitor> GetAllVisitor()
-        {
+        {// Funkar
+
             List<Visitor> visitors = new List<Visitor>();
             Visitor v;
 
@@ -35,8 +36,7 @@ namespace DatabaseAdmin.DatabaseConnections
                         v = new Visitor()
                         {
                             VisitorID = reader.GetInt32(0),
-
-                            Check_in = (DateTime)reader.GetTimeStamp(1),
+                            Check_in = (reader["check_in"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(1) : (DateTime?)null,
                             Check_out = (reader["check_out"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(2) : (DateTime?)null,
                             VisitorBadge = (reader["visitor_badge"] != DBNull.Value) ? reader.GetInt32(3) : (int?)null,
                             Firstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(4) : null,
@@ -109,10 +109,19 @@ namespace DatabaseAdmin.DatabaseConnections
         {// Funkar
             int result;
 
+            var sql = new StringBuilder();
 
-            string stmt = $"UPDATE visitor  SET check_out  = current_timestamp WHERE visitor_id = @visitor_id; " +
-                $"UPDATE visitor SET badge_returned = @badge_returned WHERE visitor_id = @visitor_id";
+            sql.AppendLine("UPDATE visitor  SET check_out  = current_timestamp WHERE visitor_id = @visitor_id;");
 
+            // kolla metoden och kolla sendan om badge returned har värde lägg till i paramerter annars inte
+
+            if (v.BadgeReturned == true)
+            {
+                sql.AppendFormat(" UPDATE visitor SET badge_returned = TRUE WHERE visitor_id = @visitor_id");
+                sql.AppendLine();
+            }
+
+            var stmt = sql.ToString();
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
@@ -120,8 +129,14 @@ namespace DatabaseAdmin.DatabaseConnections
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 {
 
-                    cmd.Parameters.AddWithValue("@visitor_id", v.VisitorID);
-                    cmd.Parameters.AddWithValue("@badge_returned", v.BadgeReturned);
+                    if (v.VisitorID != null)
+                    {
+                        cmd.Parameters.AddWithValue("@visitor_id", v.VisitorID);
+                    }
+                    //if (v.BadgeReturned == true)
+                    //{
+                    //    cmd.Parameters.AddWithValue("@badge_returned", v.BadgeReturned);
+                    //}
                     result = cmd.ExecuteNonQuery();
                 }
             }
@@ -130,10 +145,9 @@ namespace DatabaseAdmin.DatabaseConnections
 
         //För VisitorSearch
         static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname, string vLastname, string eFirstname, string eLastname, int? eID, string vCompany, string mDepartment/*, DateTime? checkedOut*/)
-        {// Uppfukkad!
+        {// 
             VisitorSearch vs;
             List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
-            //string returnVisitorName = ReturnVisitorName(vFirstname, vLastname);
 
             var sql = new StringBuilder();
             sql.AppendLine("SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in,visitor.check_out, employee.employee_id, " +
@@ -144,7 +158,7 @@ namespace DatabaseAdmin.DatabaseConnections
                 " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
                 " WHERE 1=1 ");
 
-            if (vFirstname != null )
+            if (vFirstname != null)
             {
                 sql.AppendFormat(" AND visitor.firstname = @vFirstname");
                 sql.AppendLine();
@@ -241,7 +255,7 @@ namespace DatabaseAdmin.DatabaseConnections
                         cmd.Parameters.AddWithValue("@vCompany", vCompany);
 
                     }
-                    if (vCompany != null)
+                    if (mDepartment != null)
                     {
                         cmd.Parameters.AddWithValue("@mDepartment", mDepartment);
 

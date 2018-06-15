@@ -12,11 +12,7 @@ namespace DatabaseAdmin.DatabaseConnections
 {
     static class GetEmployeeInfo
     {
-        /// <summary>
-        /// Gets EmployeeID, CheckIn, and CheckOut ( if != null ) 
-        /// NOT CheckInID (at 2018-06-10)
-        /// </summary>
-        /// <returns></returns>
+
         static public List<EmployeeCheckIn> GetAllEmployeeCheckIn()
         {// Funkar
 
@@ -24,7 +20,7 @@ namespace DatabaseAdmin.DatabaseConnections
             EmployeeCheckIn eci;
 
 
-            string stmt = "select employee_id, check_in, check_out from employee_check_in";
+            string stmt = "SELECT employee_id, check_in, check_out FROM employee_check_in";
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
@@ -167,7 +163,7 @@ namespace DatabaseAdmin.DatabaseConnections
             return result;
         }
 
-        static public Employee GetOneEmployee(int employeeID)
+        static public Employee GetOneEmployeeFromID(int employeeID)
         {// Funkar
 
             string stmt = "SELECT employee_id, firstname, lastname,  address, phonenumber, email, role, department, team FROM employee WHERE employee_id = @employee_id";
@@ -280,6 +276,33 @@ namespace DatabaseAdmin.DatabaseConnections
                     //cmd.Parameters.AddWithValue("@firstname", e.Firstname);
                     //cmd.Parameters.AddWithValue("@lastname", e.Lastname);
                     result = cmd.ExecuteNonQuery();
+                }
+            }
+            return result;
+        }
+
+        public static int CreateEmployee(Employee e)
+        {// Funkar
+            int result;
+            string stmt = "INSERT INTO employee(firstname, lastname, address, phonenumber, email, role, department, team)" +
+                " VALUES( @firstname, @lastname, @address, @phonenumber, @email, @role, @department, @team)";
+
+            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(stmt, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@firstname", e.Firstname);
+                    cmd.Parameters.AddWithValue("@lastname", e.Lastname);
+                    cmd.Parameters.AddWithValue("@address", e.Address);
+                    cmd.Parameters.AddWithValue("@phonenumber", e.PhoneNumber);
+                    cmd.Parameters.AddWithValue("@email", e.Email);
+                    cmd.Parameters.AddWithValue("@role", e.Role);
+                    cmd.Parameters.AddWithValue("@department", e.Department);
+                    cmd.Parameters.AddWithValue("@team", e.Team);
+                    result = cmd.ExecuteNonQuery();
+
                 }
             }
             return result;

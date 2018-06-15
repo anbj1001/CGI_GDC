@@ -31,24 +31,21 @@ namespace DatabaseAdmin
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            int vID = 0;
-            string vFirstname = "%";
-            string vLastname = "%";
-            string vCompany = "%";
-            DateTime vCheckIn;
-            DateTime vCheckOut;
-            int eID = 0;
-            string eFirstname = "%";
-            string eLastname = "%";
-            string mDepartment = "%";
+            string vFirstname = null;
+            string vLastname = null;
+            string eFirstname = null;
+            string eLastname = null;
+            int? eID = null;
+            string vCompany = null;
+            string mDepartment = "IT";
 
 
 
-            //Try Catch?
             List<VisitorSearch> searchResults = new List<VisitorSearch>();
 
+
             CollectionViewSource itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
-            searchResults = GetVisitorSearchInfo(vFirstname,vLastname,eFirstname,eLastname,eID,vCompany,mDepartment );
+            searchResults = GetVisitorSearchInfo(vFirstname, vLastname, eFirstname, eLastname, eID, vCompany, mDepartment);
             itemCollectionViewSource.Source = searchResults;
         }
     }

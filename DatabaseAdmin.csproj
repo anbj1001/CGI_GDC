@@ -94,6 +94,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AdminStart.xaml.cs">
+      <DependentUpon>AdminStart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseConnetions\GetBookedMeetingInfo.cs" />
     <Compile Include="DatabaseConnetions\VisitorSearch.cs" />
     <Compile Include="LoginPage.xaml.cs">
@@ -102,6 +105,9 @@
     <Compile Include="Enums\DatabaseColumns.cs" />
     <Compile Include="DatabaseConnetions\GetEmployeeInfo.cs" />
     <Compile Include="Enums\FilterSearchEnums.cs" />
+    <Compile Include="LogoutPage.xaml.cs">
+      <DependentUpon>LogoutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Admin.cs" />
     <Compile Include="DatabaseConnetions\Encryptor.cs" />
     <Compile Include="Model\EmployeeHelperClass.cs" />
@@ -113,9 +119,17 @@
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
+    <Page Include="AdminStart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogoutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
