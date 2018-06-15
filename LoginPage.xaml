@@ -5,12 +5,18 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DatabaseAdmin"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="1000"
+      d:DesignHeight="779" d:DesignWidth="1018"
       Title="LoginPage">
 
     <Grid Background="White">
-        
-        <Button x:Name="btnLogIn" Content="Log in " HorizontalAlignment="Left" Margin="484,338,0,0" VerticalAlignment="Top" Width="75" Click="btnLogIn_Click"/>
+
+        <Button x:Name="btnLogIn" Content="Log in " HorizontalAlignment="Left" Margin="345,358,0,0" VerticalAlignment="Top" Width="75" Click="btnLogIn_Click"/>
+        <Label Content="CGI GDC Östersund" HorizontalAlignment="Left" Margin="150,96,0,0" VerticalAlignment="Top" FontSize="30" Foreground="#FFE9002A"/>
+        <Label Content="Inloggning" HorizontalAlignment="Left" Margin="150,151,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="23" Margin="150,243,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="270"/>
+        <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Height="23" Margin="150,313,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="270"/>
+        <Label Content="Användarnamn: " HorizontalAlignment="Left" Margin="150,214,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Lösenord: " HorizontalAlignment="Left" Margin="150,284,0,0" VerticalAlignment="Top" FontSize="14"/>
 
     </Grid>
 </Page>

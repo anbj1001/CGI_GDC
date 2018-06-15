@@ -1,0 +1,164 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DatabaseAdmin"
+      xmlns:mui="http://firstfloorsoftware.com/ModernUI" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="DatabaseAdmin.AdminStart"
+      mc:Ignorable="d" 
+      d:DesignHeight="779" d:DesignWidth="1018"
+      Title="AdminStart">
+    <Page.Resources>
+        <CollectionViewSource x:Key="ItemCollectionViewSource" CollectionViewType="ListCollectionView"/>
+    </Page.Resources>
+
+    <Grid Background="White">
+        <TabControl Margin="10" BorderBrush="Gainsboro">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Border x:Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Boka möte" FontWeight="SemiBold" FontSize="14">
+                <Grid>
+                    <Button x:Name="btnBookMeeting" Content="Boka" HorizontalAlignment="Left" Margin="222,319,0,0" VerticalAlignment="Top" Width="75" FontSize="12"/>
+                    <TextBox x:Name="txtEmployeeLastname" HorizontalAlignment="Left" Height="23" Margin="222,171,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" FontSize="12"/>
+                    <TextBox x:Name="txtEmployeeFirstname" HorizontalAlignment="Left" Height="23" Margin="222,132,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" FontSize="12"/>
+                    <DatePicker x:Name="dpickMeetingDate" HorizontalAlignment="Left" Margin="222,233,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <xctk:TimePicker x:Name="tpickMeetingTime" Margin="222,280,681,420" AllowTextInput="True" DefaultValue="12:00" DisplayDefaultValueOnEmptyText="True" CurrentDateTimePart="Hour24" CultureInfo="se-SE" FontSize="12" />
+                    <TextBox x:Name="txtEmployeeID" HorizontalAlignment="Left" Height="23" Margin="222,90,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" FontSize="12"/>
+                    <Label Content="AnställningsID" HorizontalAlignment="Left" Margin="104,88,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="Förnamn" HorizontalAlignment="Left" Margin="104,130,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="Efternamn" HorizontalAlignment="Left" Margin="104,169,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="Datum" HorizontalAlignment="Left" Margin="104,233,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="Tid" HorizontalAlignment="Left" Margin="104,280,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="alternativt en combobox med alla employee?" HorizontalAlignment="Left" Margin="494,70,0,0" VerticalAlignment="Top" FontSize="12"/>
+
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Checka ut besökare" FontWeight="SemiBold" FontSize="14">
+                <Grid>
+                    <Button x:Name="btnCheckOut" Content="Checka ut" HorizontalAlignment="Left" Margin="324,204,0,0" VerticalAlignment="Top" Width="75" FontSize="12"/>
+                    <ComboBox x:Name="cmboVisitors" HorizontalAlignment="Left" Margin="172,109,0,0" VerticalAlignment="Top" Width="227" FontSize="12"/>
+                    <Label Content="combobox som visar alla incheckade besökare?" HorizontalAlignment="Left" Margin="450,105,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <Label Content="alternativt får man skriva in badgeID" HorizontalAlignment="Left" Margin="450,139,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <TextBox x:Name="txtBadgeID" HorizontalAlignment="Left" Height="23" Margin="279,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" FontSize="12"/>
+
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Besöksstatistik" FontWeight="SemiBold" FontSize="14">
+                <Grid>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,38,429,504"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="564,38,81,535"/>
+                    <xctk:TimePicker x:Name="tpickCheckOutFrom" Margin="118,102,785,598" AllowTextInput="True" DefaultValue="12:00" DisplayDefaultValueOnEmptyText="True" CurrentDateTimePart="Hour24" CultureInfo="se-SE" FontSize="12" />
+                    <Button x:Name="btnSearch" Content="Sök" HorizontalAlignment="Left" Margin="832,194,0,0" VerticalAlignment="Top" Width="75" Click="btnSearch_Click"/>
+
+                    <DataGrid x:Name="grdBookedMeetingResult" HorizontalAlignment="Left" Height="489" Margin="10,224,0,0" VerticalAlignment="Top" Width="968" ItemsSource="{Binding}" AutoGenerateColumns="False">
+
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,2"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.DataContext>
+                            <StaticResource ResourceKey="ItemCollectionViewSource"/>
+                        </DataGrid.DataContext>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header=" Incheckning" Binding="{Binding VisitorCheck_in}"/>
+                            <DataGridTextColumn Header=" Utcheckning" Binding="{Binding VisitorCheck_out}"/>
+                            <DataGridTextColumn Header=" Besökare Förnamn" Binding="{Binding VisitorFirstname}"/>
+                            <DataGridTextColumn Header=" Besökare Efternamn" Binding="{Binding VisitorLastname}"/>
+                            <DataGridTextColumn Header=" Företag" Binding="{Binding Company}"/>
+                            <DataGridTextColumn Header=" Anställnings-ID" Binding="{Binding EmployeeID}"/>
+                            <DataGridTextColumn Header=" Anställd Förnamn" Binding="{Binding EmployeeFirstname}"/>
+                            <DataGridTextColumn Header=" Anställd Efternamn" Binding="{Binding EmployeeLastname}"/>
+                            <DataGridTextColumn Header=" Avdelning" Binding="{Binding MeetingDepartment}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DatePicker x:Name="dpickStatDateFrom" HorizontalAlignment="Left" Margin="117,43,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" Text="Välj datum" FontSize="12"/>
+                    <DatePicker x:Name="dpickStatDateTo" HorizontalAlignment="Left" Margin="400,43,0,0" VerticalAlignment="Top" FontSize="12"/>
+                    <xctk:TimePicker x:Name="tpickCheckInFrom" Margin="118,73,785,627" AllowTextInput="True" DefaultValue="12:00" DisplayDefaultValueOnEmptyText="True" CurrentDateTimePart="Hour24" CultureInfo="se-SE" FontSize="12" />
+                    <xctk:TimePicker x:Name="tpickCheckInTo" Margin="400,72,503,628" AllowTextInput="True" DefaultValue="12:00" DisplayDefaultValueOnEmptyText="True" CurrentDateTimePart="Hour24" CultureInfo="se-SE" FontSize="12" />
+                    <xctk:TimePicker x:Name="tpickCheckOutTo" Margin="400,102,503,598" AllowTextInput="True" DefaultValue="12:00" DisplayDefaultValueOnEmptyText="True" CurrentDateTimePart="Hour24" CultureInfo="se-SE" FontSize="12" />
+                    <Label Content="Datum från" Margin="12,43,885,652" FontSize="12"/>
+                    <Label Content="Incheckning från" Margin="12,72,875,623" FontSize="12"/>
+                    <Label Content="Utcheckning från" Margin="12,101,854,594" FontSize="12"/>
+                    <Label Content="Datum till" Margin="284,43,623,652" FontSize="12"/>
+                    <Label Content="Incheckning till" Margin="284,72,589,623" FontSize="12"/>
+                    <Label Content="Utcheckning till" Margin="284,101,589,594" FontSize="12"/>
+                    <TextBox x:Name="txtStatEmployeeFirstname" Height="23" TextWrapping="Wrap" Text="" Margin="674,112,132,588" FontSize="12"/>
+
+                    <TextBox x:Name="txtStatEmployeeLastname" Height="23" TextWrapping="Wrap" Text="" Margin="674,145,132,555" FontSize="12"/>
+                    <TextBox x:Name="txtStatVisitorFirstname" Height="23" TextWrapping="Wrap" Text="" Width="120" Margin="117,142,751,558" FontSize="12"/>
+                    <TextBox x:Name="txtStatVisitorLastname" Height="23" TextWrapping="Wrap" Text="" Margin="400,142,447,558" FontSize="12"/>
+                    <TextBox x:Name="txtStatCompany" Height="23" TextWrapping="Wrap" Text="" Width="120" Margin="117,184,751,516" FontSize="12"/>
+                    <TextBox x:Name="txtStatDepartment" Height="23" TextWrapping="Wrap" Text="" Margin="674,77,132,623" FontSize="12"/>
+                    <TextBox x:Name="txtStatEmployeeID" Height="23" TextWrapping="Wrap" Text="" Margin="674,43,132,657" FontSize="12"/>
+                    <Label Content="Besöksmottagare" Margin="564,10,289,685" FontSize="12"/>
+                    <Label Content="AnställningsID" Margin="564,41,319,654" FontSize="12"/>
+                    <Label Content="Förnamn" Margin="564,107,357,588" FontSize="12"/>
+                    <Label Content="Efternamn" Margin="564,140,348,555" FontSize="12"/>
+                    <Label Content="Besökare" Margin="10,10,843,685" FontSize="12"/>
+                    <Label Content="Avdelning" Margin="564,74,348,621" FontSize="12"/>
+                    <Label Content="Företag" Margin="12,182,841,513" FontSize="12"/>
+
+                    <Label Content="Förnamn" Margin="12,140,909,555" FontSize="12"/>
+                    <Label Content="Efternamn" Margin="284,140,628,555" FontSize="12"/>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Hantera användare" FontWeight="SemiBold" FontSize="14">
+                <Grid>
+                    <Button x:Name="btnAddUser" Content="Button" HorizontalAlignment="Left" Margin="521,203,0,0" VerticalAlignment="Top" Width="75"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="80,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="575,64,0,0" VerticalAlignment="Top" Width="120"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Logga ut" FontWeight="SemiBold" FontSize="14"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </TabControl>
+
+    </Grid>
+</Page>

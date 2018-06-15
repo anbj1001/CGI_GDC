@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DatabaseAdmin.Model;
 using DatabaseAdmin.Enums;
+using static DatabaseAdmin.Model.VisitorHelperClass;
 
 
 namespace DatabaseAdmin.DatabaseConnections
@@ -128,19 +129,64 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         //För VisitorSearch
-        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname/*, string vLastname, string eLastname*/)
+        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname, string vLastname, string eFirstname, string eLastname, int? eID, string vCompany, string mDepartment/*, DateTime? checkedOut*/)
         {// Uppfukkad!
             VisitorSearch vs;
             List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
+            //string returnVisitorName = ReturnVisitorName(vFirstname, vLastname);
 
-            string stmt = "SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in," +
-                " visitor.check_out, employee.employee_id, employee.firstname, employee.lastname,booked_meeting.meeting_department" +
-                " FROM visitor " +
+            var sql = new StringBuilder();
+            sql.AppendLine("SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in,visitor.check_out, employee.employee_id, " +
+                " employee.firstname, employee.lastname,booked_meeting.meeting_department " +
+                " FROM visitor" +
                 " JOIN visitor_meeting ON visitor.visitor_id = visitor_meeting.visitor_id" +
                 " JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id" +
                 " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
-                " WHERE UPPER(visitor.firstname) LIKE UPPER(@firstname) ";
+                " WHERE 1=1 ");
 
+            if (vFirstname != null )
+            {
+                sql.AppendFormat(" AND visitor.firstname = @vFirstname");
+                sql.AppendLine();
+
+            }
+            if (vLastname != null)
+            {
+                sql.AppendFormat(" AND visitor.lastname = @vLastname");
+                sql.AppendLine();
+            }
+            if (eFirstname != null)
+            {
+                sql.AppendFormat(" AND employee.firstname = @eFirstname");
+                sql.AppendLine();
+
+            }
+            if (eLastname != null)
+            {
+                sql.AppendFormat(" AND employee.lastname = @eLastname");
+                sql.AppendLine();
+            }
+            if (eID != (int?)null)
+            {
+                sql.AppendFormat(" AND employee.employee_id = @eID");
+                sql.AppendLine();
+            }
+            if (vCompany != null)
+            {
+                sql.AppendFormat(" AND visitor.company = @vCompany");
+                sql.AppendLine();
+            }
+            if (mDepartment != null)
+            {
+                sql.AppendFormat(" AND booked_meeting.meeting_department = @mDepartment");
+                sql.AppendLine();
+            }
+            //if (checkedOut == null )
+            //{
+            //    sql.AppendFormat(" AND visitor.check_out IS NULL");
+            //    sql.AppendLine();
+            //}
+            var stmt = sql.ToString();
 
 
             /*   Var ska vi lägga allt det här???
@@ -157,18 +203,11 @@ namespace DatabaseAdmin.DatabaseConnections
                  5.Besöksmottagare anställningsnummer
                  WHERE employee.employee_id::text LIKE 'X%'
 
-                 6.Besökare namn
-                 WHERE UPPER(visitor.firstname) LIKE UPPER('X%') AND UPPER(visitor.lastname) LIKE UPPER('X%') /// LIGGER I STMT
-                 7.Besökare företagsnamn
-                 WHERE UPPER(visitor.company) LIKE UPPER('X%')
-
-                 8.Besökare som saknar uppgifter om utcheckning
-                 WHERE visitor.check_out IS null
-
+               
                  9.Avdelning(dropdown lista ?)
                  WHERE booked_meeting.meeting_department = 'Ekonomi'
-
                  */
+
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
@@ -176,10 +215,46 @@ namespace DatabaseAdmin.DatabaseConnections
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 {
 
-                    //Lägg till parametrar
-                    cmd.Parameters.AddWithValue("@firstname", vFirstname);
-                    //cmd.Parameters.AddWithValue("@vLastname", vLastname);
+                    //Lägger till parametern enbart om det finns ett värde i parametern, annars kraschar det
+                    if (vFirstname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vFirstname", vFirstname);
+                    }
+                    if (vLastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vLastname", vLastname);
+                    }
+                    if (eFirstname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eFirstname", eFirstname);
+                    }
+                    if (eLastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eLastname", eLastname);
+                    }
+                    if (eID != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eID", eID);
+                    }
+                    if (vCompany != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vCompany", vCompany);
 
+                    }
+                    if (vCompany != null)
+                    {
+                        cmd.Parameters.AddWithValue("@mDepartment", mDepartment);
+
+                    }
+                    //if (checkedOut != null)
+                    //{
+                    //    cmd.Parameters.AddWithValue("@checkedOut", checkedOut);
+
+                    //}
+
+
+
+                    //cmd.Parameters.AddWithValue("@");
 
                     using (var reader = cmd.ExecuteReader())
                     {

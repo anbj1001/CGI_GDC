@@ -15,5 +15,7 @@ namespace DatabaseAdmin.Model
         public DateTime? MeetingDate { get; set; }
         public TimeSpan? TimeStart { get; set; }
        
+       
+
     }
 }

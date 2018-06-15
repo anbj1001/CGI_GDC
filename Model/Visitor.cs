@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseAdmin.Model
 {
-    class Visitor
+   public class Visitor
     {
         public int? VisitorID { get; set; }
         public string Firstname { get; set; }

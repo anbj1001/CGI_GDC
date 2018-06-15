@@ -95,16 +95,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DatabaseConnetions\GetBookedMeetingInfo.cs" />
+    <Compile Include="DatabaseConnetions\VisitorSearch.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\VisitorSearch.cs" />
     <Compile Include="Enums\DatabaseColumns.cs" />
     <Compile Include="DatabaseConnetions\GetEmployeeInfo.cs" />
     <Compile Include="Enums\FilterSearchEnums.cs" />
     <Compile Include="Model\Admin.cs" />
     <Compile Include="DatabaseConnetions\Encryptor.cs" />
     <Compile Include="Model\EmployeeHelperClass.cs" />
+    <Compile Include="Model\SetBookedMeeting.cs" />
     <Compile Include="Model\VisitorHelperClass.cs" />
     <Compile Include="VisitorSearchPage.xaml.cs">
       <DependentUpon>VisitorSearchPage.xaml</DependentUpon>
@@ -130,8 +131,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="VisitorSearchPage.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Window1.xaml">
       <SubType>Designer</SubType>

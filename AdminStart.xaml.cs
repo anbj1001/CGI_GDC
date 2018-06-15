@@ -13,43 +13,31 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DatabaseAdmin.Model;
-using DatabaseAdmin.DatabaseConnections;
 using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
 
 namespace DatabaseAdmin
 {
     /// <summary>
-    /// Interaction logic for VisitorSearchPage.xaml
+    /// Interaction logic for AdminStart.xaml
     /// </summary>
-    public partial class VisitorSearchPage : Page
+    public partial class AdminStart : Page
     {
-
-        public VisitorSearchPage()
+        public AdminStart()
         {
             InitializeComponent();
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            int vID = 0;
-            string vFirstname = "%";
-            string vLastname = "%";
-            string vCompany = "%";
-            DateTime vCheckIn;
-            DateTime vCheckOut;
-            int eID = 0;
-            string eFirstname = "%";
-            string eLastname = "%";
-            string mDepartment = "%";
+            string vFirstname = null;
 
-
-
-            //Try Catch?
             List<VisitorSearch> searchResults = new List<VisitorSearch>();
 
             CollectionViewSource itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
-            searchResults = GetVisitorSearchInfo(vFirstname,vLastname,eFirstname,eLastname,eID,vCompany,mDepartment );
+            searchResults = GetVisitorSearchInfo(vFirstname);
             itemCollectionViewSource.Source = searchResults;
         }
+
+        
     }
 }

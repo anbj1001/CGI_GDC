@@ -12,6 +12,7 @@ using DatabaseAdmin.Enums;
 using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
 using static DatabaseAdmin.DatabaseConnections.GetEmployeeInfo;
 using static DatabaseAdmin.DatabaseConnections.Encryptor;
+using static DatabaseAdmin.DatabaseConnections.GetBookedMeetingInfo;
 using System.Xaml;
 using DatabaseAdmin.DatabaseConnections;
 using FirstFloor.ModernUI;
@@ -28,31 +29,54 @@ namespace DatabaseAdmin
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MyWindow_Loaded;
+            //Loaded += MyWindow_Loaded;
 
             cBoxTry.ItemsSource = GetAllEmployeeMeeting(); // För att printa employee till comboboxen
 
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            frame.NavigationService.Navigate(new LoginPage());
+            //frame.NavigationService.Navigate(new VisitorSearchPage());
         }
         Window1 window1 = new Window1();
 
         EmployeeHelperClass eHC = new EmployeeHelperClass();
+        SetBookedMeeting sBM = new SetBookedMeeting();
 
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
-            string vFirstname = "Kristian"; 
-            string vLastname = "";
-            string eFirstname = "Clara";
-            string eLastname = "Jonsson";
-            
-          
+            /*TEST FÖR SETBOOKEDMEETING . MÅSTE KOLLA UPP DATETIME AND TIMESTAMP
+             
+            Employee emp;
+            emp = new Employee
+            {//används även för UPDATE
+                EmployeeID = 1020,
+                Firstname = "Selma",
+                Lastname = "Lindberg",
 
-            List<VisitorSearch> visitorsSerach = GetVisitorSearchInfo(vFirstname);
+            };
+
+            string vFirstname = "Annica";
+            string vLastname = "Alienus";
+            string vCompany = "MyProject";
+            string vCity = "Mölndal";
+            string mDepartment = "IT";
+            string date ="2018-07-06";
+            DateTime timeStart = Convert.ToDateTime("15:30");
+
+
+            int result = CreateBookedMeeting(mDepartment, date, timeStart,emp);
+            */
+
+            //string eFirstname = null;
+            //string eLastname = null;
+            //int? eID = 1006;
+            //DateTime? checkedOut = null;
+
+
+            //List<VisitorSearch> visitorsSearch = GetVisitorSearchInfo(vFirstname, vLastname, eFirstname, eLastname, eID, vCompany, mDepartment, checkedOut);
         }
-         
+
         /// <summary>
         /// Test för att sätta datum 3 månader tillbaka. 
         /// skitmetod.... värdelös
@@ -60,11 +84,11 @@ namespace DatabaseAdmin
         /// <returns></returns>
         private DateTime? test()
         {
-            DateTime date;
-            date = DateTime.Now;
-            date = date.AddMonths(-3);
+            //DateTime? meetingDate = dpickFrom.;
+            //date = DateTime.Now;
+            //date = date.AddMonths(-3);
 
-            return date;
+            //return date;
         }
 
 
