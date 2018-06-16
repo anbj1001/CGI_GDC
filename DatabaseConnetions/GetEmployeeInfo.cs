@@ -201,37 +201,26 @@ namespace DatabaseAdmin.DatabaseConnections
             }
         }
 
-        static public Admin AdminLogIn(Admin a, string username, string password)
+        static public int? AdminLogIn(string username, string password)
         {//Funkar
 
             string stmt = "SELECT admin_login_id FROM admin_login WHERE username = @username AND login_password = @password ";
 
+            int? result;
 
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
-
                 conn.Open();
-
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 {
+
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-
-                        while (reader.Read())
-                        {
-
-                            a.AdminID = (reader["admin_login_id"] != DBNull.Value) ? reader.GetInt32(0) : (int?)null;
-
-                        }
-                    }
+                    result = cmd.ExecuteNonQuery();
                 }
-                return a;
-
             }
+            return result;
         }
 
         public static int MakeToAdmin(Admin a)

@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static DatabaseAdmin.DatabaseConnections.Encryptor;
+using static DatabaseAdmin.DatabaseConnections.GetEmployeeInfo;
+using DatabaseAdmin.Model;
 
 
 namespace DatabaseAdmin
@@ -27,24 +30,28 @@ namespace DatabaseAdmin
             InitializeComponent();
         }
 
+        private void LoginInput()
+        {
+            int? result;
+            string username = txtUsername.Text;
+            string password = passwBoxLogin.Password;
+
+            result = AdminLogIn(username, MD5Hash(password));
+            if (result != (int?)null)
+            {
+                NavigationService.Navigate(new AdminStart());
+            }
+            else
+            {
+                MessageBox.Show("Du har angett fel användarnamn eller lösenord");
+            }
+        }
+
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
-            //string username = "Admin3";
-            //string password = Encryptor.MD5Hash("Admin3");
-            //Admin a = GetEmployeeInfo.AdminLogIn(admin, username, password);
-            //if (a.AdminID != null)
-            //{
-
-            //    this.Hide();
-            //    window1.Show();
-            //}
-            //else
-            //    MessageBox.Show("Du angav fel lösenord eller användarnamn");
             NavigationService.Navigate(new AdminStart());
-            
-            
 
-            
+            //LoginInput();
 
         }
     }

@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DatabaseAdmin.DatabaseConnections;
 using DatabaseAdmin.Model;
 using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
 
@@ -31,23 +30,14 @@ namespace DatabaseAdmin
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             string vFirstname = null;
-            string vLastname = null ;
-            string eFirstname = null;
-            string eLastname = null;
-            int? eID = null;
-            string vCompany = null;
-            string mDepartment = "IT";
-
-
 
             List<VisitorSearch> searchResults = new List<VisitorSearch>();
 
-
             CollectionViewSource itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
-            searchResults = GetVisitorSearchInfo(vFirstname, vLastname , eFirstname, eLastname, eID, vCompany,mDepartment);
+            searchResults = GetVisitorSearchInfo(vFirstname);
             itemCollectionViewSource.Source = searchResults;
         }
 
-
+        
     }
 }

@@ -144,7 +144,7 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         //För VisitorSearch
-        static public List<VisitorSearch> GetVisitorSearchInfo(string vFirstname, string vLastname, string eFirstname, string eLastname, int? eID, string vCompany, string mDepartment/*, DateTime? checkedOut*/)
+        static public List<VisitorSearch> GetVisitorSearchInfo(Employee e, Visitor v, BookedMeeting bm/*, DateTime dateFrom, DateTime dateTo*/)
         {// 
             VisitorSearch vs;
             List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
@@ -158,39 +158,49 @@ namespace DatabaseAdmin.DatabaseConnections
                 " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
                 " WHERE 1=1 ");
 
-            if (vFirstname != null)
+            //if (dateFrom != null)
+            //{
+            //    sql.AppendFormat(" AND visitor.check_in BETWEEN @dateFrom");
+            //    sql.AppendLine();
+            //}
+            //if (dateTo != null)
+            //{
+            //    sql.AppendFormat(" AND @dateTo");
+            //    sql.AppendLine();
+            //}
+            if (v.Firstname != null)
             {
                 sql.AppendFormat(" AND visitor.firstname = @vFirstname");
                 sql.AppendLine();
 
             }
-            if (vLastname != null)
+            if (v.Lastname != null)
             {
                 sql.AppendFormat(" AND visitor.lastname = @vLastname");
                 sql.AppendLine();
             }
-            if (eFirstname != null)
+            if (e.Firstname != null)
             {
                 sql.AppendFormat(" AND employee.firstname = @eFirstname");
                 sql.AppendLine();
 
             }
-            if (eLastname != null)
+            if (e.Lastname != null)
             {
                 sql.AppendFormat(" AND employee.lastname = @eLastname");
                 sql.AppendLine();
             }
-            if (eID != (int?)null)
+            if (e.EmployeeID != (int?)null)
             {
                 sql.AppendFormat(" AND employee.employee_id = @eID");
                 sql.AppendLine();
             }
-            if (vCompany != null)
+            if (v.Company != null)
             {
                 sql.AppendFormat(" AND visitor.company = @vCompany");
                 sql.AppendLine();
             }
-            if (mDepartment != null)
+            if (bm.MeetingDepartment != null)
             {
                 sql.AppendFormat(" AND booked_meeting.meeting_department = @mDepartment");
                 sql.AppendLine();
@@ -230,41 +240,49 @@ namespace DatabaseAdmin.DatabaseConnections
                 {
 
                     //Lägger till parametern enbart om det finns ett värde i parametern, annars kraschar det
-                    if (vFirstname != null)
-                    {
-                        cmd.Parameters.AddWithValue("@vFirstname", vFirstname);
-                    }
-                    if (vLastname != null)
-                    {
-                        cmd.Parameters.AddWithValue("@vLastname", vLastname);
-                    }
-                    if (eFirstname != null)
-                    {
-                        cmd.Parameters.AddWithValue("@eFirstname", eFirstname);
-                    }
-                    if (eLastname != null)
-                    {
-                        cmd.Parameters.AddWithValue("@eLastname", eLastname);
-                    }
-                    if (eID != null)
-                    {
-                        cmd.Parameters.AddWithValue("@eID", eID);
-                    }
-                    if (vCompany != null)
-                    {
-                        cmd.Parameters.AddWithValue("@vCompany", vCompany);
-
-                    }
-                    if (mDepartment != null)
-                    {
-                        cmd.Parameters.AddWithValue("@mDepartment", mDepartment);
-
-                    }
-                    //if (checkedOut != null)
+                    //if (dateTo != null)
                     //{
-                    //    cmd.Parameters.AddWithValue("@checkedOut", checkedOut);
-
+                    //    cmd.Parameters.AddWithValue("@dateFrom", dateFrom);
                     //}
+                    //if (dateFrom != null)
+                    //{
+                    //    cmd.Parameters.AddWithValue("@dateTo", dateTo);
+                    //}
+                    if (v.Firstname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vFirstname", v.Firstname);
+                    }
+                    if (v.Lastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vLastname", v.Lastname);
+                    }
+                    if (e.Firstname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eFirstname", e.Firstname);
+                    }
+                    if (e.Lastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eLastname", e.Lastname);
+                    }
+                    if (e.EmployeeID != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eID", e.EmployeeID);
+                    }
+                    if (v.Company != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vCompany", v.Company);
+
+                    }
+                    if (bm.MeetingDepartment != null)
+                    {
+                        cmd.Parameters.AddWithValue("@mDepartment", bm.MeetingDepartment);
+
+                    }
+                    if (v.Check_out != null)
+                    {
+                        cmd.Parameters.AddWithValue("@checkedOut", v.Check_out);
+
+                    }
 
 
 

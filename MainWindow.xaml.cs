@@ -29,45 +29,20 @@ namespace DatabaseAdmin
         public MainWindow()
         {
             InitializeComponent();
-            //Loaded += MyWindow_Loaded;
+            Loaded += MyWindow_Loaded;
 
             cBoxTry.ItemsSource = GetAllEmployeeMeeting(); // För att printa employee till comboboxen
 
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //frame.NavigationService.Navigate(new LoginPage());
+            frame.NavigationService.Navigate(new LoginPage());
         }
 
         EmployeeHelperClass eHC = new EmployeeHelperClass();
 
         private void btnLogIn_Click(object sender, RoutedEventArgs e)
         {
-            //Visitor v;
-            //v = new Visitor
-            //{
-            //    Firstname = "Kristian",
-            //    Lastname = "Norqvist",
-            //    VisitorID = 10020,
-            //    BadgeReturned = true
-            //};
-
-
-            Employee emp;
-            emp = new Employee()
-            {//används även för UPDATE
-                Firstname = "Klas",
-                Lastname = "Klasson",
-                Address = "Klassonvägen 33",
-                PhoneNumber = "11223344",
-                Email = "klas@klasson.se",
-                Role = "Praktikant",
-                Department = "Ekonomi",
-                Team = "N/A"
-                
-            };
-            int result = CreateEmployee(emp);
-            //List<VisitorSearch> visitorsSearch = GetVisitorSearchInfo(vFirstname, vLastname, eFirstname, eLastname, eID, vCompany, mDepartment, checkedOut);
         }
             /*TEST FÖR SETBOOKEDMEETING . MÅSTE KOLLA UPP DATETIME AND TIMESTAMP
              

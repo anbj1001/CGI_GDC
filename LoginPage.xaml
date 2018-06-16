@@ -17,6 +17,8 @@
         <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Height="23" Margin="150,313,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="270"/>
         <Label Content="Användarnamn: " HorizontalAlignment="Left" Margin="150,214,0,0" VerticalAlignment="Top" FontSize="14"/>
         <Label Content="Lösenord: " HorizontalAlignment="Left" Margin="150,284,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <PasswordBox x:Name="passwBoxLogin" HorizontalAlignment="Left" Margin="150,313,0,0" VerticalAlignment="Top" Width="269" Height="23"/>
+        <Label x:Name="lblInfo" Content="Användarnamn: Admin&#xD;&#xA;Lösen: Admin" HorizontalAlignment="Left" Margin="501,225,0,0" VerticalAlignment="Top" Width="235"/>
 
     </Grid>
 </Page>
