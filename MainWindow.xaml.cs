@@ -187,7 +187,7 @@ int i = GetEmployeeInfo.UpdateEmployeeInfo(ee, column, changedValue);
             {
                 //List<BookedMeeting> bookedMeetings = GetTimeAndDepartment(fName, lName);
                 List<Employee> employees = GetAllEmployeeMeeting();
-                //List<Visitor> visitorMeetings = GetAllVisitorMeeting();
+                //List<Visitor> visitorMeetings = GetVisitorMeeting();
                 //List<EmployeeCheckIn> checkIns = GetAllEmployeeCheckIn();
                 //List<Visitor> visitors = GetAllVisitor();
                 //List<BookedMeeting> bookedMeetings = GetAllBookedMeeting();

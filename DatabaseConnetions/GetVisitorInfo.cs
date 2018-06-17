@@ -36,8 +36,8 @@ namespace DatabaseAdmin.DatabaseConnections
                         v = new Visitor()
                         {
                             VisitorID = reader.GetInt32(0),
-                            Check_in = (reader["check_in"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(1) : (DateTime?)null,
-                            Check_out = (reader["check_out"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(2) : (DateTime?)null,
+                            CheckInDate = (reader["check_in"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(1) : (DateTime?)null,
+                            CheckOutDate = (reader["check_out"] != DBNull.Value) ? (DateTime)reader.GetTimeStamp(2) : (DateTime?)null,
                             VisitorBadge = (reader["visitor_badge"] != DBNull.Value) ? reader.GetInt32(3) : (int?)null,
                             Firstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(4) : null,
                             Lastname = (reader["lastname"] != DBNull.Value) ? reader.GetString(5) : null,
@@ -52,56 +52,103 @@ namespace DatabaseAdmin.DatabaseConnections
             }
         }
 
-        static public List<Visitor> GetAllVisitorMeeting()
+        static public List<Visitor> GetVisitorMeeting(Visitor v, Employee e)
         {// Funkar men ej klar. Vilken info behövs?
-            Visitor v;
+
             BookedMeeting bm;
             List<Visitor> visitorsMeetings = new List<Visitor>();
 
+            var sql = new StringBuilder();
+            sql.AppendLine("SELECT booked_meeting.date, booked_meeting.time_start, booked_meeting.meeting_department, employee.firstname, employee.lastname  " +
+                " FROM(((visitor_meeting" +
+                " INNER JOIN visitor ON visitor.visitor_id = visitor_meeting.visitor_id)" +
+                " INNER JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id)" +
+                " INNER JOIN employee ON booked_meeting.visit_responsible = employee.employee_id) " +
+                " WHERE 1 = 1");
 
-            string stmt = "SELECT  visitor.firstname, visitor.lastname, visitor.company, visitor.city, visitor.check_in," +
-                " visitor.check_out, booked_meeting.meeting_department, booked_meeting.date, booked_meeting.time_start " +
-                "FROM(((visitor_meeting INNER JOIN visitor ON visitor.visitor_id = visitor_meeting.visitor_id) " +
-                "INNER JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id) " +
-                "INNER JOIN employee ON booked_meeting.visit_responsible = employee.employee_id) ";
 
+
+            if (e.Firstname != null)
+            {
+                sql.AppendFormat(" AND employee.firstname = @eFirstname");
+                sql.AppendLine();
+            }
+            if (e.Lastname != null)
+            {
+                sql.AppendFormat(" AND employee.lastname = @eLastname");
+                sql.AppendLine();
+            }
+            if (v.Firstname != null)
+            {
+                sql.AppendFormat(" AND visitor.firstname = @vFirstname");
+                sql.AppendLine();
+            }
+            if (v.Lastname != null)
+            {
+                sql.AppendFormat(" AND visitor.lastname = @vLastname");
+                sql.AppendLine();
+            }
+
+
+            var stmt = sql.ToString();
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["dbConn"].ConnectionString))
             {
-
                 conn.Open();
                 using (var cmd = new NpgsqlCommand(stmt, conn))
-                using (var reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (e.Firstname != null)
                     {
-                        bm = new BookedMeeting
-                        {
-
-                            //BookedMeetingID = (reader["booked_meeting_id"] != DBNull.Value) ? reader.GetInt32(5) : (int?)null,
-                            MeetingDepartment = (reader["meeting_department"] != DBNull.Value) ? reader.GetString(6) : null,
-                            MeetingDate = (reader["date"] != DBNull.Value) ? reader.GetDateTime(7) : (DateTime?)null,
-                            TimeStart = (reader["time_start"] != DBNull.Value) ? reader.GetTimeSpan(8) : (TimeSpan?)null,
-                            //VisitResponsible = (reader["visit_responsible"] != DBNull.Value) ? reader.GetInt32(11) : (int?)null,
-
-
-                        };
-                        v = new Visitor(bm)
-                        {
-                            //VisitorID = (reader["visitor_id"] != DBNull.Value) ? reader.GetInt32(0) : (int?)null,
-                            Firstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(0) : null,
-                            Lastname = (reader["lastname"] != DBNull.Value) ? reader.GetString(1) : null,
-                            Company = (reader["company"] != DBNull.Value) ? reader.GetString(2) : null,
-                            City = (reader["city"] != DBNull.Value) ? reader.GetString(3) : null,
-                            //VisitorBadge = (reader["visitor_badge"] != DBNull.Value) ? reader.GetInt32(5) : (int?)null,
-                            Check_in = (reader["check_in"] != DBNull.Value) ? reader.GetTimeStamp(4).ToDateTime() : (DateTime?)null,
-                            Check_out = (reader["check_out"] != DBNull.Value) ? reader.GetTimeStamp(5).ToDateTime() : (DateTime?)null,
-
-                        };
-                        visitorsMeetings.Add(v);
+                        cmd.Parameters.AddWithValue("@eFirstname", e.Firstname);
                     }
+                    if (e.Lastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@eLastname", e.Lastname);
+                    }
+                    if (v.Firstname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vFirstname", v.Firstname);
+                    }
+                    if (v.Lastname != null)
+                    {
+                        cmd.Parameters.AddWithValue("@vLastname", v.Lastname);
+                    }
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+
+
+
+                        while (reader.Read())
+                        {
+                            bm = new BookedMeeting
+                            {
+
+                                //BookedMeetingID = (reader["booked_meeting_id"] != DBNull.Value) ? reader.GetInt32(5) : (int?)null,
+                                MeetingDate = (reader["date"] != DBNull.Value) ? reader.GetDateTime(1) : (DateTime?)null,
+                                TimeStart = (reader["time_start"] != DBNull.Value) ? reader.GetTimeSpan(2):  (TimeSpan?) null,
+                                MeetingDepartment = (reader["meeting_department"] != DBNull.Value) ? reader.GetString(0) : null,
+                                //VisitResponsible = (reader["visit_responsible"] != DBNull.Value) ? reader.GetInt32(11) : (int?)null,
+
+
+                            };
+                            v = new Visitor(bm)
+                            {
+                                //VisitorID = (reader["visitor_id"] != DBNull.Value) ? reader.GetInt32(0) : (int?)null,
+                                Firstname = (reader["firstname"] != DBNull.Value) ? reader.GetString(3) : null,
+                                Lastname = (reader["lastname"] != DBNull.Value) ? reader.GetString(4) : null,
+                                Company = (reader["company"] != DBNull.Value) ? reader.GetString(5) : null,
+                                City = (reader["city"] != DBNull.Value) ? reader.GetString(6) : null,
+                                //VisitorBadge = (reader["visitor_badge"] != DBNull.Value) ? reader.GetInt32(5) : (int?)null,
+                                CheckInDate = (reader["check_in"] != DBNull.Value) ? reader.GetTimeStamp(4).ToDateTime() : (DateTime?)null,
+                                CheckOutDate = (reader["check_out"] != DBNull.Value) ? reader.GetTimeStamp(5).ToDateTime() : (DateTime?)null,
+
+                            };
+                            visitorsMeetings.Add(v);
+                        }
+                    }
+                    return visitorsMeetings;
                 }
-                return visitorsMeetings;
             }
         }
 
@@ -144,69 +191,81 @@ namespace DatabaseAdmin.DatabaseConnections
         }
 
         //För VisitorSearch
-        static public List<VisitorSearch> GetVisitorSearchInfo(Employee e, Visitor v, BookedMeeting bm/*, DateTime dateFrom, DateTime dateTo*/)
+        static public List<VisitorSearch> GetVisitorSearchInfo(Employee e, Visitor v, BookedMeeting bm, DateTime? dateFrom, DateTime? dateTo, string timeFrom, string timeTo)
         {// 
             VisitorSearch vs;
             List<VisitorSearch> visitorSearch = new List<VisitorSearch>();
 
             var sql = new StringBuilder();
-            sql.AppendLine("SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in,visitor.check_out, employee.employee_id, " +
-                " employee.firstname, employee.lastname,booked_meeting.meeting_department " +
+            sql.AppendLine("SELECT visitor.visitor_id, visitor.firstname, visitor.lastname, visitor.company, visitor.check_in_time, visitor.check_out_time, visitor.check_in_date, visitor.check_out_date," +
+                " employee.employee_id, employee.firstname, employee.lastname,booked_meeting.meeting_department " +
                 " FROM visitor" +
                 " JOIN visitor_meeting ON visitor.visitor_id = visitor_meeting.visitor_id" +
                 " JOIN booked_meeting ON visitor_meeting.booked_meeting_id = booked_meeting.booked_meeting_id" +
                 " JOIN employee ON booked_meeting.visit_responsible = employee.employee_id" +
                 " WHERE 1=1 ");
 
-            //if (dateFrom != null)
-            //{
-            //    sql.AppendFormat(" AND visitor.check_in BETWEEN @dateFrom");
-            //    sql.AppendLine();
-            //}
-            //if (dateTo != null)
-            //{
-            //    sql.AppendFormat(" AND @dateTo");
-            //    sql.AppendLine();
-            //}
-            if (v.Firstname != null)
+
+
+            if (timeFrom != null)
             {
+                sql.AppendFormat(" AND visitor.check_in_time BETWEEN @timeFrom::timestamp");
+                sql.AppendLine();
+            }
+            if (timeTo != null)
+            {
+                sql.AppendFormat(" AND @timeTo::timestamp");
+                sql.AppendLine();
+            }
+            if (dateFrom != null)
+            {// Funkar
+                sql.AppendFormat(" AND visitor.check_in_date BETWEEN @dateFrom");
+                sql.AppendLine();
+            }
+            if (dateTo != null)
+            {// Funkar
+                sql.AppendFormat(" AND @dateTo");
+                sql.AppendLine();
+            }
+            if (v.Firstname != null)
+            {// Funkar
                 sql.AppendFormat(" AND visitor.firstname = @vFirstname");
                 sql.AppendLine();
 
             }
             if (v.Lastname != null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND visitor.lastname = @vLastname");
                 sql.AppendLine();
             }
             if (e.Firstname != null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND employee.firstname = @eFirstname");
                 sql.AppendLine();
 
             }
             if (e.Lastname != null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND employee.lastname = @eLastname");
                 sql.AppendLine();
             }
             if (e.EmployeeID != (int?)null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND employee.employee_id = @eID");
                 sql.AppendLine();
             }
             if (v.Company != null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND visitor.company = @vCompany");
                 sql.AppendLine();
             }
             if (bm.MeetingDepartment != null)
-            {
+            {// Funkar
                 sql.AppendFormat(" AND booked_meeting.meeting_department = @mDepartment");
                 sql.AppendLine();
             }
-            //if (checkedOut == null )
-            //{
+            //if (v.CheckOutDate == null)
+            //{// Funkar
             //    sql.AppendFormat(" AND visitor.check_out IS NULL");
             //    sql.AppendLine();
             //}
@@ -214,17 +273,8 @@ namespace DatabaseAdmin.DatabaseConnections
 
 
             /*   Var ska vi lägga allt det här???
-             *   1.Datumintervall - Kalender
-                 WHERE visitor.check_in BETWEEN 'XXXX-XX-XX%' AND 'XXXX-XX-XX%'
-
-                 2.Tidsintervall in
-
-                 3.Tidsintervall ut
-
-                 4.Besöksmottagare namn
-                 WHERE UPPER(employee.firstname) LIKE UPPER('X%') AND UPPER(employee.lastname) LIKE UPPER('X%')
-
-                 5.Besöksmottagare anställningsnummer
+             *  
+                5.Besöksmottagare anställningsnummer
                  WHERE employee.employee_id::text LIKE 'X%'
 
                
@@ -239,49 +289,56 @@ namespace DatabaseAdmin.DatabaseConnections
                 using (var cmd = new NpgsqlCommand(stmt, conn))
                 {
 
-                    //Lägger till parametern enbart om det finns ett värde i parametern, annars kraschar det
-                    //if (dateTo != null)
-                    //{
-                    //    cmd.Parameters.AddWithValue("@dateFrom", dateFrom);
-                    //}
-                    //if (dateFrom != null)
-                    //{
-                    //    cmd.Parameters.AddWithValue("@dateTo", dateTo);
-                    //}
-                    if (v.Firstname != null)
+                    // Lägger till parametern enbart om det finns ett värde i parametern, annars kraschar det
+                    if (timeTo != null)
                     {
+                        cmd.Parameters.AddWithValue("@timeTo", timeTo.ToString());
+
+                    }
+                    if (timeFrom != null)
+                    {
+                        cmd.Parameters.AddWithValue("@timeFrom", timeFrom.ToString());
+
+                    }
+                    if (dateTo != null)
+                    {// Funkar
+                        cmd.Parameters.AddWithValue("@dateFrom", dateFrom);
+                    }
+                    if (dateFrom != null)
+                    {// Funkar
+                        cmd.Parameters.AddWithValue("@dateTo", dateTo);
+                    }
+                    if (v.Firstname != null)
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@vFirstname", v.Firstname);
                     }
                     if (v.Lastname != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@vLastname", v.Lastname);
                     }
                     if (e.Firstname != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@eFirstname", e.Firstname);
                     }
                     if (e.Lastname != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@eLastname", e.Lastname);
                     }
                     if (e.EmployeeID != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@eID", e.EmployeeID);
                     }
                     if (v.Company != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@vCompany", v.Company);
-
                     }
                     if (bm.MeetingDepartment != null)
-                    {
+                    {// Funkar
                         cmd.Parameters.AddWithValue("@mDepartment", bm.MeetingDepartment);
-
                     }
-                    if (v.Check_out != null)
-                    {
-                        cmd.Parameters.AddWithValue("@checkedOut", v.Check_out);
-
+                    if (v.CheckOutDate != null)
+                    {// Funkar
+                        cmd.Parameters.AddWithValue("@checkedOut", v.CheckOutDate);
                     }
 
 

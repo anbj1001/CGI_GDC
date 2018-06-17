@@ -12,8 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DatabaseAdmin.DatabaseConnections;
 using DatabaseAdmin.Model;
 using static DatabaseAdmin.DatabaseConnections.GetVisitorInfo;
+using static DatabaseAdmin.DatabaseConnections.VisitorSearch;
+
 
 namespace DatabaseAdmin
 {
@@ -27,17 +30,71 @@ namespace DatabaseAdmin
             InitializeComponent();
         }
 
-        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        private void GetMeetingInfo()
         {
-            string vFirstname = null;
+            // Besöksansvarig
+            Employee e = new Employee
+            {
+                Firstname = "Arvid"/*txtStatEmployeeFirstname.Text*/,
+                Lastname = "Ahmed"/*txtStatEmployeeLastname.Text*/,
+                //Department = txtStatDepartment.Text
+
+            };
+
+            Visitor v = new Visitor
+            {
+                Firstname = "Per"/* txtStatVisitorFirstname.Text*/,
+                Lastname = "Jensen" /*txtStatVisitorLastname.Text*/,
+                Company = "Polismyndigheten"/*txtStatCompany.Text*/
+            };
+            List<Visitor> visitorMeeing = GetVisitorMeeting(v, e);
+        }
+
+        private void SendSearchInfo()
+        {
+            DateTime? dateFrom = dpickStatDateFrom.SelectedDate;
+            string timeFrom = tpickFrom.Value.ToString();
+
+            DateTime? dateTo = dpickStatDateTo.SelectedDate;
+            string timeTo = tpickTo.Value.ToString();
+
+            Employee emp = new Employee
+            {//testEmployee
+                Firstname = null,
+                Lastname = null,
+                EmployeeID = null,
+            };
+
+            Visitor v = new Visitor
+            {// testVisitor
+                Firstname = null,
+                Lastname = null,
+                Company = null,
+                CheckOutDate = null,
+                CheckInTime = null,
+
+            };
+
+            BookedMeeting bm = new BookedMeeting
+            {// TestBookedMeeting
+                MeetingDepartment = null
+            };
 
             List<VisitorSearch> searchResults = new List<VisitorSearch>();
 
             CollectionViewSource itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
-            searchResults = GetVisitorSearchInfo(vFirstname);
+            searchResults = GetVisitorSearchInfo(emp, v, bm, dateFrom, dateTo, timeFrom, timeTo);
             itemCollectionViewSource.Source = searchResults;
         }
 
-        
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+
+            GetMeetingInfo();
+
+
+        }
+
+
     }
 }
