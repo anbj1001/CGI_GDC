@@ -1,4 +1,4 @@
-﻿using DatabaseAdmin.DatabaseConnections;
+﻿using DatabaseAdmin.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static DatabaseAdmin.DatabaseConnections.Encryptor;
-using static DatabaseAdmin.DatabaseConnections.GetEmployeeInfo;
-using DatabaseAdmin.Model;
+using static DatabaseAdmin.Model.Encryptor;
+using static DatabaseAdmin.Model.GetEmployeeInfo;
 
 
 namespace DatabaseAdmin

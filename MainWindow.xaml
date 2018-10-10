@@ -6,30 +6,13 @@
         xmlns:local="clr-namespace:DatabaseAdmin"
         xmlns:Custom="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="DatabaseAdmin.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="828.591" Width="1170.856">
+        Title="MainWindow" Height="768" Width="1366">
     <Grid Background="White">
-        <Button x:Name="btnLogIn" Content="Log in " HorizontalAlignment="Left" Margin="10,217,0,0" VerticalAlignment="Top" Width="75" Click="btnLogIn_Click"/>
-        <ComboBox x:Name="cBoxTry" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="cBoxTry_SelectionChanged"/>
-        <DatePicker x:Name="dpickFrom" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top"   DisplayDate="2018-06-14" SelectedDateFormat="Short"
-                    FirstDayOfWeek="Monday" SelectedDateChanged="DatePicker_SelectedDateChanged" RenderTransformOrigin="-0.186,0.729"/>
-        <Label x:Name="lblDateFrom" Content="Från:" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="dpickTo" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" SelectedDateChanged="dpickTo_SelectedDateChanged"/>
-        <Label x:Name="lblDateTo" Content="Till:" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top"/>
-        <Frame x:Name="frame" Content="Frame" HorizontalAlignment="Left" Height="779" Margin="135,10,0,0" VerticalAlignment="Top" Width="1018" NavigationUIVisibility="Hidden"/>
-        <Button x:Name="btnStartPage" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" Height="70" BorderThickness="0" BorderBrush="{x:Null}" Foreground="White" Click="btnStartPage_Click" ToolTip="Startsida">
-            <Button.Template>
-                <ControlTemplate>
-                    <Border HorizontalAlignment="Center" VerticalAlignment="Center" >
-                        <Image Source="media/CGI-logo.png" 
-                               Width="102" 
-                               Height="70"/>
-                    </Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-        <Image Source="mediaCGI-logo.png" HorizontalAlignment="Left" Margin="10,265,0,0" VerticalAlignment="Top" Stretch="None" Width="125" Height="524"/>
+        <Frame x:Name="frame" Content="Frame" HorizontalAlignment="Left" Height="718" Margin="135,10,0,0" VerticalAlignment="Top" Width="1213" NavigationUIVisibility="Hidden"/>
 
         <Custom:SelectiveScrollingGrid HorizontalAlignment="Left" Height="100" Margin="448,294,0,0" VerticalAlignment="Top" Width="100"/>
+        <Image Source="Images/CGI-logo.png" HorizontalAlignment="Left" Height="79" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" Stretch="UniformToFill"/>
+        <Image Source="Images/bg-left-contact.jpg" HorizontalAlignment="Left" Height="414" Margin="10,314,0,0" VerticalAlignment="Top" Width="120" Stretch="UniformToFill"/>
 
     </Grid>
 </Window>

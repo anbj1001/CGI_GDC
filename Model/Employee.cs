@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DatabaseAdmin.Model
 
 {
-   public class Employee
+    public class Employee 
     {
+        
         public int? EmployeeID { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
@@ -18,23 +15,17 @@ namespace DatabaseAdmin.Model
         public string Role { get; set; }
         public string Department { get; set; }
         public string Team { get; set; }
-        public List<BookedMeeting> BookedMeetings { get; set; }
 
-        public Employee(BookedMeeting bookedMeeting)
-        {
-            BookedMeetings = new List<BookedMeeting>
-            {
-                bookedMeeting
-            };
-        }
+        public List<BookedMeeting> BookedMeetings;
+
+
         public Employee()
         {
-
+            BookedMeetings = new List<BookedMeeting>();
         }
-
         public override string ToString()
         {
-            return $"{Firstname} {Lastname}"; 
+            return $"{EmployeeID} {Firstname} {Lastname}";
         }
 
     }
